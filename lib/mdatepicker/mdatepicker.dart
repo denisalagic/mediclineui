@@ -13,13 +13,13 @@ class MDatePicker extends StatelessWidget {
 
   final TextEditingController controller;
   final Function onTap;
-  final Function validator;
+  final Function(String?) validator;
   final String label;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: validator(),
+      validator: (val) => validator(val),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(
