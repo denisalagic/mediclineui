@@ -590,7 +590,7 @@ class _MDropdownState<T> extends State<MDropdown<T>> {
     final enabled = widget.enabled;
     final decoration = widget.decoration;
     final disabledDecoration = widget.disabledDecoration;
-    final safeHintText = widget.hintText ?? 'Select value';
+    final safeHintText = widget.hintText ?? 'Odaberi';
 
     return IgnorePointer(
       ignoring: !widget.enabled,
@@ -636,7 +636,7 @@ class _MDropdownState<T> extends State<MDropdown<T>> {
                     }
                   },
                   noResultFoundText:
-                      widget.noResultFoundText ?? 'No result found.',
+                      widget.noResultFoundText ?? 'Nema rezultata.',
                   noResultFoundBuilder: widget.noResultFoundBuilder,
                   items: widget.items ?? [],
                   itemsScrollCtrl: widget.itemsScrollController,
@@ -653,7 +653,7 @@ class _MDropdownState<T> extends State<MDropdown<T>> {
                   headerBuilder: widget.headerBuilder,
                   headerListBuilder: widget.headerListBuilder,
                   hintText: safeHintText,
-                  searchHintText: widget.searchHintText ?? 'Search',
+                  searchHintText: widget.searchHintText ?? 'Pretraga',
                   hintBuilder: widget.hintBuilder,
                   decoration: decoration,
                   overlayHeight: widget.overlayHeight,
