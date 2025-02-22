@@ -43,7 +43,7 @@ class MDatePicker extends StatelessWidget {
         labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText),
       ),
       readOnly: true,
-      onTap: onTap(),
+      onTap: () => onTap,
     );
   }
 }
