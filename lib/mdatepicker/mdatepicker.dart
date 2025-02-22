@@ -12,7 +12,7 @@ class MDatePicker extends StatelessWidget {
   });
 
   final TextEditingController controller;
-  final Function onTap;
+  final GestureTapCallback? onTap;
   final Function(String?) validator;
   final String label;
 
@@ -43,7 +43,7 @@ class MDatePicker extends StatelessWidget {
         labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText),
       ),
       readOnly: true,
-      onTap: () => onTap,
+      onTap: onTap,
     );
   }
 }
