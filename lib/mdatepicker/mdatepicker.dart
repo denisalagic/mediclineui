@@ -19,7 +19,9 @@ class MDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (val) => validator(val),
+      validator: (val) {
+        return validator(val);
+      },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(
