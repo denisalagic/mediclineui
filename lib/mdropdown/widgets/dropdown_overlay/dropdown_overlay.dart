@@ -87,6 +87,26 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
   bool? mayFoundSearchRequestResult;
   late List<T> items;
   late T? selectedItem;
+
+  @override
+  void didUpdateWidget(_DropdownOverlay<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.items != widget.items ||
+        oldWidget.selectedItemsNotifier.value !=
+            widget.selectedItemsNotifier.value) {
+      if (widget.dropdownType == _DropdownType.multipleSelect) {
+        items = _sortItemsBySelected(widget.items);
+      } else {
+        items = widget.items;
+      }
+    }
+  }
+
+  List<T> _sortItemsBySelected(List<T> itemsToSort) {
+    final selected = widget.selectedItemsNotifier.value;
+    return List.from(itemsToSort)
+      ..sort((a, b) => selected.contains(b) ? 1 : (selected.contains(a) ? -1 : 0));
+  }
   late List<T> selectedItems;
   late ScrollController scrollController;
   final key1 = GlobalKey(), key2 = GlobalKey();
@@ -211,11 +231,11 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     widget.selectedItemNotifier.addListener(singleSelectListener);
     widget.selectedItemsNotifier.addListener(multiSelectListener);
 
-    if (widget.excludeSelected &&
-        widget.items.length > 1 &&
-        selectedItem != null) {
-      T value = selectedItem as T;
-      items = widget.items.where((item) => item != value).toList();
+    if (widget.dropdownType == _DropdownType.multipleSelect) {
+      items = _sortItemsBySelected(widget.items);
+    } else if (widget.excludeSelected &&
+        widget.items.length > 1 && selectedItem != null) {
+      items = widget.items.where((item) => item != selectedItem).toList();
     } else {
       items = widget.items;
     }
