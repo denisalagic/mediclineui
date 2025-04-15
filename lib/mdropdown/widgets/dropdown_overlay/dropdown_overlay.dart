@@ -104,9 +104,22 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
 
   List<T> _sortItemsBySelected(List<T> itemsToSort) {
     final selected = widget.selectedItemsNotifier.value;
-    return List.from(itemsToSort)
-      ..sort((a, b) => selected.contains(b) ? 1 : (selected.contains(a) ? -1 : 0));
+    final indexed = itemsToSort.asMap().entries.toList();
+
+    indexed.sort((a, b) {
+      final aSelected = selected.contains(a.value);
+      final bSelected = selected.contains(b.value);
+
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+
+      // Keep original order
+      return a.key.compareTo(b.key);
+    });
+
+    return indexed.map((e) => e.value).toList();
   }
+
   late List<T> selectedItems;
   late ScrollController scrollController;
   final key1 = GlobalKey(), key2 = GlobalKey();
