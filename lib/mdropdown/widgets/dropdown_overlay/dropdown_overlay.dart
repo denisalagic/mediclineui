@@ -113,7 +113,6 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
       if (aSelected && !bSelected) return -1;
       if (!aSelected && bSelected) return 1;
 
-      // Keep original order
       return a.key.compareTo(b.key);
     });
 
