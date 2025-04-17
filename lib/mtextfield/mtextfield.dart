@@ -7,7 +7,7 @@ class MTextField extends StatelessWidget {
     super.key,
     required this.controller,
     this.onTap,
-    required this.validator,
+    this.validator,
     required this.label,
     this.minLines,
     this.maxLines,
@@ -17,7 +17,7 @@ class MTextField extends StatelessWidget {
 
   final TextEditingController controller;
   final GestureTapCallback? onTap;
-  final Function(String?) validator;
+  final Function(String?)? validator;
   final String label;
   final int? minLines;
   final int? maxLines;
@@ -28,7 +28,7 @@ class MTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       validator: (val) {
-        return validator(val);
+        return validator != null ? validator!(val) : null;
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
