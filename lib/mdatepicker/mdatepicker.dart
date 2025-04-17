@@ -35,7 +35,7 @@ class MDatePicker extends StatelessWidget {
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 12.0,
+          vertical: 14.0,
         ),
         suffixIcon: Icon(Icons.calendar_today, color: MColors.hintText),
         floatingLabelBehavior: FloatingLabelBehavior.never,
