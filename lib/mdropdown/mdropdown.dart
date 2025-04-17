@@ -611,7 +611,7 @@ class _MDropdownState<T> extends State<MDropdown<T>> {
           _formFieldState = formFieldState;
           return InputDecorator(
             decoration: InputDecoration(
-              errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
+              //errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
               errorText: formFieldState.errorText,
               border: InputBorder.none,
               //contentPadding: EdgeInsets.zero,
