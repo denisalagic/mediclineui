@@ -40,7 +40,7 @@ class MDatePicker extends StatelessWidget {
         suffixIcon: Icon(Icons.calendar_today, color: MColors.hintText),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
-        labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText),
+        labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText, letterSpacing: 1.1),
       ),
       readOnly: true,
       onTap: onTap,
