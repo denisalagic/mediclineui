@@ -614,7 +614,7 @@ class _MDropdownState<T> extends State<MDropdown<T>> {
               errorStyle: decoration?.errorStyle ?? _defaultErrorStyle,
               errorText: formFieldState.errorText,
               border: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
+              //contentPadding: EdgeInsets.zero,
             ),
             child: _OverlayBuilder(
               overlayPortalController: widget.overlayController,
