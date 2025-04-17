@@ -6,11 +6,13 @@ class MTextField extends StatelessWidget {
   const MTextField({
     super.key,
     required this.controller,
-    required this.onTap,
+    this.onTap,
     required this.validator,
     required this.label,
     this.minLines,
     this.maxLines,
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   final TextEditingController controller;
@@ -19,6 +21,8 @@ class MTextField extends StatelessWidget {
   final String label;
   final int? minLines;
   final int? maxLines;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,8 @@ class MTextField extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
         labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText, letterSpacing: 1.1),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
       onTap: onTap,
       minLines: minLines,
