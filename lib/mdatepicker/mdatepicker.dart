@@ -37,6 +37,20 @@ class MDatePicker extends StatelessWidget {
           horizontal: 16.0,
           vertical: 14.0,
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Colors.red,
+            width: 1.5,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Colors.red,
+            width: 1.5,
+          ),
+        ),
         suffixIcon: Icon(Icons.calendar_today, color: MColors.hintText),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
