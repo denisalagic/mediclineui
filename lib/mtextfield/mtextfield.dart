@@ -9,12 +9,16 @@ class MTextField extends StatelessWidget {
     required this.onTap,
     required this.validator,
     required this.label,
+    this.minLines,
+    this.maxLines,
   });
 
   final TextEditingController controller;
   final GestureTapCallback? onTap;
   final Function(String?) validator;
   final String label;
+  final int? minLines;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +41,13 @@ class MTextField extends StatelessWidget {
           horizontal: 16.0,
           vertical: 12.0,
         ),
-        suffixIcon: Icon(Icons.calendar_today, color: MColors.hintText),
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        labelText: label,
+        labelText: label.toUpperCase(),
         labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText),
       ),
       onTap: onTap,
+      minLines: minLines,
+      maxLines: maxLines,
     );
   }
 }
