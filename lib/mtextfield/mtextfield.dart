@@ -39,7 +39,7 @@ class MTextField extends StatelessWidget {
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 12.0,
+          vertical: 16.0,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -55,6 +55,7 @@ class MTextField extends StatelessWidget {
             width: 1.5,
           ),
         ),
+        alignLabelWithHint: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
         labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText, letterSpacing: 1.1),
