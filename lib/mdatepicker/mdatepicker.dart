@@ -35,7 +35,7 @@ class MDatePicker extends StatelessWidget {
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 16.0,
+          vertical: 24.0,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),

@@ -29,7 +29,7 @@ enum _SearchType { onListData, onRequestData }
 const _defaultErrorColor = Colors.red;
 
 const _defaultBorderRadius = BorderRadius.all(
-  Radius.circular(12),
+  Radius.circular(8),
 );
 
 final Border _defaultErrorBorder = Border.all(
