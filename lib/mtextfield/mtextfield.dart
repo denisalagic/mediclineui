@@ -55,6 +55,7 @@ class MTextField extends StatelessWidget {
             width: 1.5,
           ),
         ),
+        error: Text('adadad'),
         alignLabelWithHint: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
