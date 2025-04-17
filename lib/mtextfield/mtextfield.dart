@@ -44,6 +44,7 @@ class MTextField extends StatelessWidget {
             width: 1.5,
           ),
         ),
+        contentPadding: EdgeInsets.zero,
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
