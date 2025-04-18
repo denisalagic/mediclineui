@@ -13,7 +13,7 @@ class MTextField extends StatelessWidget {
     this.maxLines,
     this.prefixIcon,
     this.suffixIcon,
-    this.enabled
+    this.enabled = false
   });
 
   final TextEditingController controller;
@@ -67,7 +67,7 @@ class MTextField extends StatelessWidget {
       onTap: onTap,
       minLines: minLines,
       maxLines: maxLines,
-      enabled: enabled,
+      readOnly: enabled!,
     );
   }
 }
