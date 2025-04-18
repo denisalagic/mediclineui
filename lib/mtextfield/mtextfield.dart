@@ -13,6 +13,7 @@ class MTextField extends StatelessWidget {
     this.maxLines,
     this.prefixIcon,
     this.suffixIcon,
+    this.enabled
   });
 
   final TextEditingController controller;
@@ -23,6 +24,7 @@ class MTextField extends StatelessWidget {
   final int? maxLines;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,7 @@ class MTextField extends StatelessWidget {
       onTap: onTap,
       minLines: minLines,
       maxLines: maxLines,
+      enabled: enabled,
     );
   }
 }

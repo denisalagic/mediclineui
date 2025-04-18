@@ -9,12 +9,14 @@ class MDatePicker extends StatelessWidget {
     required this.onTap,
     required this.validator,
     required this.label,
+    this.enabled,
   });
 
   final TextEditingController controller;
   final GestureTapCallback? onTap;
   final Function(String?) validator;
   final String label;
+  final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class MDatePicker extends StatelessWidget {
       ),
       readOnly: true,
       onTap: onTap,
+      enabled: enabled,
     );
   }
 }
