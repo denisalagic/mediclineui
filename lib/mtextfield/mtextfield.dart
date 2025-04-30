@@ -30,7 +30,9 @@ class MTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: const EdgeInsetsDirectional.only(
+        top: 12.0,
+      ),
       child: TextFormField(
         validator: (val) {
           return validator != null ? validator!(val) : null;
