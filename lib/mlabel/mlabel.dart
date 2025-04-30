@@ -10,7 +10,7 @@ class MLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label.toUpperCase(),
-      style: GoogleFonts.ibmPlexMono(
+      style: GoogleFonts.ibmPlexSans(
         fontSize: 14.0,
         letterSpacing: 2.0,
         color: Colors.grey.shade800,
