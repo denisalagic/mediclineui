@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MOrderLabel extends StatelessWidget {
-  const MOrderLabel({super.key, required this.label});
+class MLabel extends StatelessWidget {
+  const MLabel({super.key, required this.label});
 
   final String label;
 
