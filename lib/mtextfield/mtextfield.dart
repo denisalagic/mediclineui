@@ -31,7 +31,7 @@ class MTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(
-        top: 12.0,
+        top: 4.0,
       ),
       child: TextFormField(
         validator: (val) {
