@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/mcolors.dart';
 
@@ -52,7 +53,15 @@ class MDatePicker extends StatelessWidget {
         suffixIcon: Icon(Icons.calendar_today, color: MColors.hintText),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
-        labelStyle: TextStyle(fontSize: 16.0, color: MColors.hintText, letterSpacing: 1.1),
+        labelStyle: GoogleFonts.ubuntu(
+            fontSize: 16.0,
+            letterSpacing: 1.1,
+            color: MColors.hintText
+        ),
+      ),
+      style: GoogleFonts.ubuntu(
+        fontSize: 16.0,
+        letterSpacing: 1.1,
       ),
       readOnly: true,
       onTap: onTap,

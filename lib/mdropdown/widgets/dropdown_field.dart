@@ -87,8 +87,9 @@ class _DropDownFieldState<T> extends State<_DropDownField<T>> {
       maxLines: widget.maxLines,
       overflow: TextOverflow.ellipsis,
       style: widget.headerStyle ??
-          TextStyle(
-            fontSize: 16,
+          GoogleFonts.ubuntu(
+            fontSize: 16.0,
+            letterSpacing: 1.1,
             fontWeight: FontWeight.w500,
             color: widget.enabled ? null : Colors.black.withOpacity(.5),
           ),
@@ -101,8 +102,10 @@ class _DropDownFieldState<T> extends State<_DropDownField<T>> {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: widget.hintStyle ??
-          const TextStyle(
-            fontSize: 16,
+          GoogleFonts.ubuntu(
+            fontSize: 16.0,
+            letterSpacing: 1.1,
+            fontWeight: FontWeight.w500,
             color: Color(0xFFA7A7A7),
           ),
     );

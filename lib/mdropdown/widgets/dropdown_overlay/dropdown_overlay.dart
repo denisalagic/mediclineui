@@ -162,7 +162,9 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
             result.toString(),
             maxLines: widget.maxLines,
             overflow: TextOverflow.ellipsis,
-            style: widget.listItemStyle ?? const TextStyle(fontSize: 16),
+            style: widget.listItemStyle ?? GoogleFonts.ubuntu(
+              fontSize: 16.0,
+            ),
           ),
         ),
         if (widget.dropdownType == _DropdownType.multipleSelect)
@@ -193,7 +195,11 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
       overflow: TextOverflow.ellipsis,
       style:
           widget.headerStyle ??
-          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              GoogleFonts.ubuntu(
+                fontSize: 16.0,
+                letterSpacing: 1.1,
+                fontWeight: FontWeight.w500,
+              ),
     );
   }
 
@@ -204,11 +210,12 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
       overflow: TextOverflow.ellipsis,
       style:
           widget.hintStyle ??
-          const TextStyle(
-            fontSize: 16,
-            color: Color(0xFFA7A7A7),
-            letterSpacing: 1.1,
-          ),
+              GoogleFonts.ubuntu(
+                fontSize: 16.0,
+                letterSpacing: 1.1,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFFA7A7A7),
+              ),
     );
   }
 
@@ -218,7 +225,9 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: Text(
           text,
-          style: widget.noResultFoundStyle ?? const TextStyle(fontSize: 16),
+          style: widget.noResultFoundStyle ?? GoogleFonts.ubuntu(
+            fontSize: 16.0,
+          ),
         ),
       ),
     );
