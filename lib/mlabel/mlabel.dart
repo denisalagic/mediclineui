@@ -11,7 +11,11 @@ class MLabel extends StatelessWidget {
     return Text(
       label.toUpperCase(),
       style: GoogleFonts.roboto(
-          fontSize: 14.0, fontWeight: FontWeight.bold, letterSpacing: 2.0),
+        fontSize: 14.0,
+        fontWeight: FontWeight.w300,
+        letterSpacing: 2.0,
+        color: Colors.grey.shade700,
+      ),
     );
   }
 }
