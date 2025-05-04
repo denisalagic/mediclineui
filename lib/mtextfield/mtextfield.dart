@@ -9,6 +9,7 @@ class MTextField extends StatelessWidget {
     required this.controller,
     this.onTap,
     this.validator,
+    this.onChanged,
     required this.label,
     this.minLines,
     this.maxLines,
@@ -20,6 +21,7 @@ class MTextField extends StatelessWidget {
   final TextEditingController controller;
   final GestureTapCallback? onTap;
   final Function(String?)? validator;
+  final Function? onChanged;
   final String label;
   final int? minLines;
   final int? maxLines;
@@ -81,6 +83,7 @@ class MTextField extends StatelessWidget {
         minLines: minLines,
         maxLines: maxLines,
         readOnly: enabled!,
+        onChanged: onChanged == null ? null : onChanged!(),
       ),
     );
   }
