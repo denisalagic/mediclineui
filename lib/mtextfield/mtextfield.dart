@@ -15,7 +15,8 @@ class MTextField extends StatelessWidget {
     this.maxLines,
     this.prefixIcon,
     this.suffixIcon,
-    this.enabled = false
+    this.enabled = false,
+    this.keyboardType = TextInputType.text
   });
 
   final TextEditingController controller;
@@ -28,6 +29,7 @@ class MTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final bool? enabled;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +86,7 @@ class MTextField extends StatelessWidget {
         maxLines: maxLines,
         readOnly: enabled!,
         onChanged: (val) => onChanged!(val),
+        keyboardType: keyboardType,
       ),
     );
   }
