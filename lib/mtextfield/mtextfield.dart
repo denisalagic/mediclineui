@@ -85,7 +85,7 @@ class MTextField extends StatelessWidget {
         minLines: minLines,
         maxLines: maxLines,
         readOnly: enabled!,
-        onChanged: (val) => onChanged!(val),
+        onChanged: onChanged != null ? (val) => onChanged!(val) : null,
         keyboardType: keyboardType,
       ),
     );
