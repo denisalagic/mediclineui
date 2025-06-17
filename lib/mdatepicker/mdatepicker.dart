@@ -11,6 +11,7 @@ class MDatePicker extends StatelessWidget {
     this.validator,
     required this.label,
     this.enabled,
+    this.suffixIcon
   });
 
   final TextEditingController controller;
@@ -18,6 +19,7 @@ class MDatePicker extends StatelessWidget {
   final Function(String?)? validator;
   final String label;
   final bool? enabled;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class MDatePicker extends StatelessWidget {
             width: 1.5,
           ),
         ),
-        suffixIcon: Icon(Icons.calendar_today, color: MColors.hintText),
+        suffixIcon: suffixIcon ?? Icon(Icons.calendar_today, color: MColors.hintText),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: label,
         labelStyle: GoogleFonts.ubuntu(
