@@ -8,23 +8,21 @@ class MDatePicker extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onTap,
-    required this.validator,
+    this.validator,
     required this.label,
     this.enabled,
   });
 
   final TextEditingController controller;
   final GestureTapCallback? onTap;
-  final Function(String?) validator;
+  final Function(String?)? validator;
   final String label;
   final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (val) {
-        return validator(val);
-      },
+      validator: (val) => validator != null ? validator!(val): null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(
