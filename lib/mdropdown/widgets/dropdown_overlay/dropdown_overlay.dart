@@ -161,7 +161,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
           child: Text(
             result.toString(),
             maxLines: widget.maxLines,
-            overflow: TextOverflow.ellipsis,
+            //overflow: TextOverflow.ellipsis,
             style: widget.listItemStyle ?? GoogleFonts.ubuntu(
               fontSize: 16.0,
             ),
