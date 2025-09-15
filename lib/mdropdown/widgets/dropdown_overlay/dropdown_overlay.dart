@@ -160,7 +160,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
         Expanded(
           child: Text(
             result.toString(),
-            maxLines: widget.maxLines,
+            //maxLines: widget.maxLines,
             //overflow: TextOverflow.ellipsis,
             softWrap: true,
             overflow: TextOverflow.visible,
