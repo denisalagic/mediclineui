@@ -14,6 +14,7 @@ class DropDownField<T> extends StatefulWidget {
   final int maxLines;
   final bool enabled;
   final DropdownType dropdownType;
+  final bool hasError;
 
   const DropDownField({
     super.key,
@@ -26,6 +27,7 @@ class DropDownField<T> extends StatefulWidget {
     this.suffixIcon,
     this.maxLines = 1,
     this.enabled = true,
+    this.hasError = false,
   });
 
   @override
@@ -121,6 +123,11 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
         decoration: BoxDecoration(
           color: MDropdownDecoration.fillColor,
           borderRadius: MDropdownDecoration.borderRadius,
+          border: Border.all(
+            color: widget.hasError
+                ? Theme.of(context).colorScheme.error
+                : Colors.transparent,
+          ),
         ),
         child: Row(
           children: [

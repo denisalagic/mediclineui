@@ -40,7 +40,6 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   final GlobalKey _fieldKey = GlobalKey();
   late SingleSelectController<T?> singleCtrl;
   late MultiSelectController<T> multiCtrl;
-  String? _errorText;
 
   @override
   void initState() {
@@ -88,12 +87,7 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
       singleCtrl.selected = selectedItem;
       widget.onChanged?.call(selectedItem);
     }
-
-    if (widget.validator != null) {
-      setState(() {
-        _errorText = widget.validator!(selected.isEmpty ? null : selected);
-      });
-    }
+    // Remove _errorText handling - let FormField handle validation
   }
 
   Future<void> _openPicker(BuildContext context) async {
@@ -153,7 +147,17 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
             children: [
               DropDownField<T>(
                 key: _fieldKey,
-                onTap: () => _openPicker(context),
+                onTap: () async {
+                  await _openPicker(context);
+                  // Update FormField value after selection
+                  final currentValue =
+                      widget.isMultiSelect
+                          ? multiCtrl.value
+                          : (singleCtrl.value != null
+                              ? [singleCtrl.value as T]
+                              : <T>[]);
+                  field.didChange(currentValue);
+                },
                 selectedItemNotifier: singleCtrl,
                 selectedItemsNotifier: multiCtrl,
                 dropdownType:
@@ -164,12 +168,13 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
                 prefixIcon: widget.prefixIcon,
                 suffixIcon: widget.suffixIcon,
                 maxLines: 1,
+                hasError: field.hasError,
               ),
-              if (_errorText != null)
+              if (field.hasError)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 12.0),
                   child: Text(
-                    _errorText!,
+                    field.errorText!,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                       fontSize: 12,
