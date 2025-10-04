@@ -125,7 +125,7 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
           borderRadius: MDropdownDecoration.borderRadius,
           border: Border.all(
             color: widget.hasError
-                ? Theme.of(context).colorScheme.error
+                ? Colors.red
                 : Colors.transparent,
           ),
         ),
