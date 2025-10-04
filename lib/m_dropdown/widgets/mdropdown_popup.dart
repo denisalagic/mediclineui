@@ -50,7 +50,8 @@ class DropdownPicker {
                     },
                   ),
                   const SizedBox(height: 8),
-                  Expanded(
+                  SizedBox(
+                    height: maxHeight - 60,
                     child: ListView.builder(
                       shrinkWrap: true, // important
                       physics: const ClampingScrollPhysics(),
