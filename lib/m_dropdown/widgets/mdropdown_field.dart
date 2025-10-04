@@ -127,6 +127,7 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
             color: widget.hasError
                 ? Colors.red
                 : Colors.transparent,
+            width: 1.5,
           ),
         ),
         child: Row(
