@@ -31,6 +31,7 @@ class MDropdown2<T> extends StatefulWidget {
 }
 
 class _MDropdownState<T> extends State<MDropdown2<T>> {
+  final GlobalKey<DropDownFieldState> _dropdownFieldKey = GlobalKey<DropDownFieldState>();
   late SingleSelectController<T?> singleCtrl;
   late MultiSelectController<T> multiCtrl;
 
@@ -71,10 +72,12 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
 
   Future<void> _openPicker(BuildContext context) async {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
-      // get widget position
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final GlobalKey<DropDownFieldState> _dropdownFieldKey = GlobalKey<DropDownFieldState>();
-        final fieldState = _dropdownFieldKey.currentState as DropDownFieldState;
+      final fieldState = _dropdownFieldKey.currentState;
+      if (fieldState == null) {
+        // Widget is not yet built
+        WidgetsBinding.instance.addPostFrameCallback((_) => _openPicker(context));
+        return;
+      }
         final renderBox = fieldState.fieldKey.currentContext!.findRenderObject() as RenderBox;
         final fieldWidth = renderBox.size.width;
         final position = renderBox.localToGlobal(Offset.zero);
@@ -92,8 +95,6 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
           onConfirmed: _onConfirmed,
           width: fieldWidth,
         );
-      });
-
     } else {
       await DropdownPicker.showBottomSheet<T>(
         context: context,
