@@ -72,9 +72,12 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   Future<void> _openPicker(BuildContext context) async {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
       // get widget position
-      final renderBox = context.findRenderObject() as RenderBox;
-      final size = renderBox.size;
+      final GlobalKey<DropDownFieldState> dropdownFieldKey = GlobalKey<DropDownFieldState>();
+      final fieldState = dropdownFieldKey.currentState as DropDownFieldState;
+      final renderBox = fieldState.fieldKey.currentContext!.findRenderObject() as RenderBox;
+      final fieldWidth = renderBox.size.width;
       final position = renderBox.localToGlobal(Offset.zero);
+
       await DropdownPicker.showPopup<T>(
         context: context,
         position: position,
@@ -86,6 +89,7 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
         isMulti: widget.isMultiSelect,
         searchHint: widget.hintText,
         onConfirmed: _onConfirmed,
+        width: fieldWidth,
       );
     } else {
       await DropdownPicker.showBottomSheet<T>(
