@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../constants/mcolors.dart';
+import 'm_dropdown_decoration.dart';
 import 'm_dropdown_item.dart';
 
 class MDropdownBottomSheet<T> extends StatefulWidget {
@@ -10,29 +13,32 @@ class MDropdownBottomSheet<T> extends StatefulWidget {
     required this.onChanged,
     required this.isMultiSelect,
     required this.searchHint,
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   final String label;
   final List<T> items;
   final List<T> selectedItems;
-  final Function(List<T>) onChanged;
   final bool isMultiSelect;
   final String searchHint;
+  final Function(List<T>) onChanged;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
-  State<MDropdownBottomSheet<T>> createState() =>
-      _MDropdownBottomSheetState<T>();
+  State<MDropdownBottomSheet<T>> createState() => _MDropdownBottomSheetState<T>();
 }
 
 class _MDropdownBottomSheetState<T> extends State<MDropdownBottomSheet<T>> {
-  late List<T> _filteredItems;
+  late List<T> _filtered;
   late List<T> _selected;
 
   @override
   void initState() {
     super.initState();
-    _selected = List<T>.from(widget.selectedItems);
-    _filteredItems = List<T>.from(widget.items);
+    _selected = List.from(widget.selectedItems);
+    _filtered = List.from(widget.items);
   }
 
   void _openBottomSheet() async {
@@ -40,73 +46,58 @@ class _MDropdownBottomSheetState<T> extends State<MDropdownBottomSheet<T>> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (_) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.8,
-          builder: (_, controller) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: widget.searchHint,
-                      prefixIcon: const Icon(Icons.search),
-                      border: const OutlineInputBorder(),
-                    ),
-                    onChanged: (query) {
-                      setState(() {
-                        _filteredItems = widget.items
-                            .where((e) => e
-                            .toString()
-                            .toLowerCase()
-                            .contains(query.toLowerCase()))
-                            .toList();
-                      });
-                    },
-                  ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => StatefulBuilder(
+        builder: (_, setModalState) => Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  hintText: widget.searchHint,
+                  prefixIcon: const Icon(Icons.search),
+                  border: const OutlineInputBorder(),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    controller: controller,
-                    itemCount: _filteredItems.length,
-                    itemBuilder: (context, index) {
-                      final item = _filteredItems[index];
-                      final selected = _selected.contains(item);
-                      return MDropdownItem<T>(
-                        item: item,
-                        selected: selected,
-                        onTap: () {
-                          setState(() {
-                            if (widget.isMultiSelect) {
-                              selected
-                                  ? _selected.remove(item)
-                                  : _selected.add(item);
-                            } else {
-                              _selected = [item];
-                            }
-                          });
-                        },
-                      );
-                    },
-                  ),
+                onChanged: (q) => setModalState(() {
+                  _filtered = widget.items
+                      .where((e) => e.toString().toLowerCase().contains(q.toLowerCase()))
+                      .toList();
+                }),
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _filtered.length,
+                  itemBuilder: (_, i) {
+                    final item = _filtered[i];
+                    final selected = _selected.contains(item);
+                    return MDropdownItem<T>(
+                      item: item,
+                      selected: selected,
+                      onTap: () => setModalState(() {
+                        if (widget.isMultiSelect) {
+                          selected ? _selected.remove(item) : _selected.add(item);
+                        } else {
+                          _selected = [item];
+                        }
+                      }),
+                    );
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      widget.onChanged(_selected);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Potvrdi'),
-                  ),
-                )
-              ],
-            );
-          },
-        );
-      },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  widget.onChanged(_selected);
+                  Navigator.pop(context);
+                },
+                child: const Text('Potvrdi'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -118,14 +109,36 @@ class _MDropdownBottomSheetState<T> extends State<MDropdownBottomSheet<T>> {
 
     return GestureDetector(
       onTap: _openBottomSheet,
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: widget.label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          filled: true,
-          fillColor: Colors.white,
+      child: Container(
+        padding: MDropdownDecoration.defaultPadding,
+        decoration: BoxDecoration(
+          color: MDropdownDecoration.defaultFillColor,
+          border: MDropdownDecoration.defaultBorder,
+          borderRadius: MDropdownDecoration.defaultRadius,
         ),
-        child: Text(displayText),
+        child: Row(
+          children: [
+            if (widget.prefixIcon != null) ...[
+              widget.prefixIcon!,
+              const SizedBox(width: 8),
+            ],
+            Expanded(
+              child: Text(
+                displayText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.ubuntu(
+                  fontSize: 16,
+                  letterSpacing: 1.1,
+                  fontWeight: FontWeight.w500,
+                  color: _selected.isEmpty ? MColors.hintText : Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            widget.suffixIcon ?? MDropdownDecoration.defaultIcon,
+          ],
+        ),
       ),
     );
   }
