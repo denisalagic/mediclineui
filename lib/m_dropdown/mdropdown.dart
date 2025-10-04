@@ -16,6 +16,7 @@ class MDropdown2<T> extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.onMultiChanged,
     this.validator,
   });
 
@@ -25,7 +26,8 @@ class MDropdown2<T> extends StatefulWidget {
   final String hintText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final void Function(List<T>)? onChanged;
+  final void Function(T?)? onChanged; // For single select
+  final void Function(List<T>)? onMultiChanged;
   final String? Function(List<T>?)? validator;
 
   @override
@@ -67,15 +69,18 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   void _onConfirmed(List<T> selected) {
     if (widget.isMultiSelect) {
       multiCtrl.setAll(selected);
+      widget.onMultiChanged?.call(selected);
     } else {
-      singleCtrl.selected = selected.isNotEmpty ? selected.first : null;
+      final selectedItem = selected.isNotEmpty ? selected.first : null;
+      singleCtrl.selected = selectedItem;
+      widget.onChanged?.call(selectedItem);
     }
+
     if (widget.validator != null) {
       setState(() {
         _errorText = widget.validator!(selected.isEmpty ? null : selected);
       });
     }
-    widget.onChanged?.call(selected);
   }
 
   Future<void> _openPicker(BuildContext context) async {
