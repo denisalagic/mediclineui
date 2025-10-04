@@ -52,6 +52,8 @@ class DropdownPicker {
                   const SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
+                      shrinkWrap: true, // important
+                      physics: const ClampingScrollPhysics(),
                       itemCount: filtered.length,
                       itemBuilder: (c, i) {
                         final it = filtered[i];
