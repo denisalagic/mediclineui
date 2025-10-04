@@ -31,7 +31,6 @@ class MDropdown2<T> extends StatefulWidget {
 }
 
 class _MDropdownState<T> extends State<MDropdown2<T>> {
-  final GlobalKey<DropDownFieldState> _dropdownFieldKey = GlobalKey<DropDownFieldState>();
   late SingleSelectController<T?> singleCtrl;
   late MultiSelectController<T> multiCtrl;
 
@@ -72,29 +71,22 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
 
   Future<void> _openPicker(BuildContext context) async {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
-      final fieldState = _dropdownFieldKey.currentState;
-      if (fieldState == null) {
-        // Widget is not yet built
-        WidgetsBinding.instance.addPostFrameCallback((_) => _openPicker(context));
-        return;
-      }
-        final renderBox = fieldState.fieldKey.currentContext!.findRenderObject() as RenderBox;
-        final fieldWidth = renderBox.size.width;
-        final position = renderBox.localToGlobal(Offset.zero);
-
-        await DropdownPicker.showPopup<T>(
-          context: context,
-          position: position,
-          items: widget.items,
-          initialSelected:
-          widget.isMultiSelect
-              ? multiCtrl.value
-              : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
-          isMulti: widget.isMultiSelect,
-          searchHint: widget.hintText,
-          onConfirmed: _onConfirmed,
-          width: fieldWidth,
-        );
+      // get widget position
+      final renderBox = context.findRenderObject() as RenderBox;
+      final size = renderBox.size;
+      final position = renderBox.localToGlobal(Offset.zero);
+      await DropdownPicker.showPopup<T>(
+        context: context,
+        position: position,
+        items: widget.items,
+        initialSelected:
+            widget.isMultiSelect
+                ? multiCtrl.value
+                : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
+        isMulti: widget.isMultiSelect,
+        searchHint: widget.hintText,
+        onConfirmed: _onConfirmed,
+      );
     } else {
       await DropdownPicker.showBottomSheet<T>(
         context: context,
