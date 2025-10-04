@@ -33,7 +33,6 @@ class MDropdown2<T> extends StatefulWidget {
 class _MDropdownState<T> extends State<MDropdown2<T>> {
   late SingleSelectController<T?> singleCtrl;
   late MultiSelectController<T> multiCtrl;
-  final GlobalKey<DropDownFieldState> _dropdownFieldKey = GlobalKey<DropDownFieldState>();
 
   @override
   void initState() {
@@ -74,6 +73,7 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
       // get widget position
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final GlobalKey<DropDownFieldState> _dropdownFieldKey = GlobalKey<DropDownFieldState>();
         final fieldState = _dropdownFieldKey.currentState as DropDownFieldState;
         final renderBox = fieldState.fieldKey.currentContext!.findRenderObject() as RenderBox;
         final fieldWidth = renderBox.size.width;
