@@ -27,10 +27,10 @@ class MDropdown2<T> extends StatefulWidget {
   final void Function(List<T>)? onChanged;
 
   @override
-  State<MDropdown2<T>> createState() => _MDropdown2State<T>();
+  State<MDropdown2<T>> createState() => _MDropdownState<T>();
 }
 
-class _MDropdown2State<T> extends State<MDropdown2<T>> {
+class _MDropdownState<T> extends State<MDropdown2<T>> {
   final GlobalKey _fieldKey = GlobalKey();
   late SingleSelectController<T?> singleCtrl;
   late MultiSelectController<T> multiCtrl;
@@ -39,9 +39,10 @@ class _MDropdown2State<T> extends State<MDropdown2<T>> {
   void initState() {
     super.initState();
     singleCtrl = SingleSelectController<T?>(
-        widget.initialSelected?.isNotEmpty == true
-            ? widget.initialSelected!.first
-            : null);
+      widget.initialSelected?.isNotEmpty == true
+          ? widget.initialSelected!.first
+          : null,
+    );
     multiCtrl = MultiSelectController<T>(widget.initialSelected ?? []);
   }
 
@@ -52,7 +53,8 @@ class _MDropdown2State<T> extends State<MDropdown2<T>> {
       if (widget.isMultiSelect) {
         multiCtrl.setAll(widget.initialSelected!);
       } else {
-        singleCtrl.selected = widget.initialSelected!.isNotEmpty
+        singleCtrl.selected =
+        widget.initialSelected!.isNotEmpty
             ? widget.initialSelected!.first
             : null;
       }
@@ -65,14 +67,20 @@ class _MDropdown2State<T> extends State<MDropdown2<T>> {
     } else {
       singleCtrl.selected = selected.isNotEmpty ? selected.first : null;
     }
-    if (widget.onChanged != null) widget.onChanged!(selected);
+    widget.onChanged?.call(selected);
   }
 
   Future<void> _openPicker(BuildContext context) async {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
+      // Measure the field's size
+      final renderBox = _fieldKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox == null) return;
+
+      final size = renderBox.size;
+      final position = renderBox.localToGlobal(Offset.zero);
+
       await DropdownPicker.showPopup<T>(
         context: context,
-        fieldKey: _fieldKey,
         items: widget.items,
         initialSelected: widget.isMultiSelect
             ? multiCtrl.value
@@ -80,6 +88,8 @@ class _MDropdown2State<T> extends State<MDropdown2<T>> {
         isMulti: widget.isMultiSelect,
         searchHint: widget.hintText,
         onConfirmed: _onConfirmed,
+        width: size.width,      // auto match field width
+        position: position,
       );
     } else {
       await DropdownPicker.showBottomSheet<T>(
@@ -100,7 +110,7 @@ class _MDropdown2State<T> extends State<MDropdown2<T>> {
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 4.0),
       child: DropDownField<T>(
-        fieldKey: _fieldKey,
+        key: _fieldKey,
         onTap: () => _openPicker(context),
         selectedItemNotifier: singleCtrl,
         selectedItemsNotifier: multiCtrl,
