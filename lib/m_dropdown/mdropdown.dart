@@ -33,6 +33,7 @@ class MDropdown2<T> extends StatefulWidget {
 class _MDropdownState<T> extends State<MDropdown2<T>> {
   late SingleSelectController<T?> singleCtrl;
   late MultiSelectController<T> multiCtrl;
+  final GlobalKey<DropDownFieldState> _dropdownFieldKey = GlobalKey<DropDownFieldState>();
 
   @override
   void initState() {
@@ -72,25 +73,27 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   Future<void> _openPicker(BuildContext context) async {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
       // get widget position
-      final GlobalKey<DropDownFieldState> dropdownFieldKey = GlobalKey<DropDownFieldState>();
-      final fieldState = dropdownFieldKey.currentState as DropDownFieldState;
-      final renderBox = fieldState.fieldKey.currentContext!.findRenderObject() as RenderBox;
-      final fieldWidth = renderBox.size.width;
-      final position = renderBox.localToGlobal(Offset.zero);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final fieldState = _dropdownFieldKey.currentState as DropDownFieldState;
+        final renderBox = fieldState.fieldKey.currentContext!.findRenderObject() as RenderBox;
+        final fieldWidth = renderBox.size.width;
+        final position = renderBox.localToGlobal(Offset.zero);
 
-      await DropdownPicker.showPopup<T>(
-        context: context,
-        position: position,
-        items: widget.items,
-        initialSelected:
-            widget.isMultiSelect
-                ? multiCtrl.value
-                : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
-        isMulti: widget.isMultiSelect,
-        searchHint: widget.hintText,
-        onConfirmed: _onConfirmed,
-        width: fieldWidth,
-      );
+        await DropdownPicker.showPopup<T>(
+          context: context,
+          position: position,
+          items: widget.items,
+          initialSelected:
+          widget.isMultiSelect
+              ? multiCtrl.value
+              : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
+          isMulti: widget.isMultiSelect,
+          searchHint: widget.hintText,
+          onConfirmed: _onConfirmed,
+          width: fieldWidth,
+        );
+      });
+
     } else {
       await DropdownPicker.showBottomSheet<T>(
         context: context,
