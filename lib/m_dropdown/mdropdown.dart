@@ -50,10 +50,10 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
       multiCtrl = MultiSelectController<T>(widget.initialSelected ?? []);
     } else {
       singleCtrl = SingleSelectController<T?>(
-          widget.initialSelectedItem ??
-              (widget.initialSelected?.isNotEmpty == true
-                  ? widget.initialSelected!.first
-                  : null)
+        widget.initialSelectedItem ??
+            (widget.initialSelected?.isNotEmpty == true
+                ? widget.initialSelected!.first
+                : null),
       );
       multiCtrl = MultiSelectController<T>([]);
     }
@@ -68,7 +68,8 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
         multiCtrl.setAll(widget.initialSelected!);
       }
     } else {
-      final newSelected = widget.initialSelectedItem ??
+      final newSelected =
+          widget.initialSelectedItem ??
           (widget.initialSelected?.isNotEmpty == true
               ? widget.initialSelected!.first
               : null);
@@ -138,35 +139,46 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 4.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DropDownField<T>(
-            key: _fieldKey,
-            onTap: () => _openPicker(context),
-            selectedItemNotifier: singleCtrl,
-            selectedItemsNotifier: multiCtrl,
-            dropdownType:
-                widget.isMultiSelect
-                    ? DropdownType.multipleSelect
-                    : DropdownType.singleSelect,
-            hintText: widget.hintText,
-            prefixIcon: widget.prefixIcon,
-            suffixIcon: widget.suffixIcon,
-            maxLines: 1,
-          ),
-          if (_errorText != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 12.0),
-              child: Text(
-                _errorText!,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                  fontSize: 12,
-                ),
+      child: FormField<List<T>>(
+        validator: widget.validator,
+        initialValue:
+            widget.isMultiSelect
+                ? (widget.initialSelected ?? [])
+                : (widget.initialSelectedItem != null
+                    ? [widget.initialSelectedItem!]
+                    : widget.initialSelected ?? []),
+        builder: (FormFieldState<List<T>> field) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropDownField<T>(
+                key: _fieldKey,
+                onTap: () => _openPicker(context),
+                selectedItemNotifier: singleCtrl,
+                selectedItemsNotifier: multiCtrl,
+                dropdownType:
+                    widget.isMultiSelect
+                        ? DropdownType.multipleSelect
+                        : DropdownType.singleSelect,
+                hintText: widget.hintText,
+                prefixIcon: widget.prefixIcon,
+                suffixIcon: widget.suffixIcon,
+                maxLines: 1,
               ),
-            ),
-        ],
+              if (_errorText != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 12.0),
+                  child: Text(
+                    _errorText!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
