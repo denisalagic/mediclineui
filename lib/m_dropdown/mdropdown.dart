@@ -86,7 +86,6 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
         isMulti: widget.isMultiSelect,
         searchHint: widget.hintText,
         onConfirmed: _onConfirmed,
-        width: size.width,
       );
     } else {
       await DropdownPicker.showBottomSheet<T>(

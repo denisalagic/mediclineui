@@ -14,14 +14,13 @@ class DropdownPicker {
     required String searchHint,
     required Function(List<T>) onConfirmed,
     double maxHeight = 400,
-    required double width,
   }) async {
     List<T> filtered = List.from(items);
     List<T> selected = List.from(initialSelected);
 
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final posRect = Rect.fromPoints(position, position);
-
+    final width = overlay.size.width;
     await showMenu<T>(
       context: context,
       position: RelativeRect.fromRect(posRect, Offset.zero & overlay.size),
