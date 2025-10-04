@@ -72,7 +72,7 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   }
 
   Future<void> _openPicker(BuildContext context) async {
-    if (DeviceHelpers.isDesktopDeviceOrWeb) {
+    if (!DeviceHelpers.isDesktopDeviceOrWeb) {
       // Measure the field's size
       final renderBox = _fieldKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox == null) return;
