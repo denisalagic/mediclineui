@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'mdropdown_item.dart';
 
 class DropdownPicker {
-  // Web/desktop popup
+  // Desktop/Web popup
   static Future<void> showPopup<T>({
     required BuildContext context,
     required GlobalKey fieldKey,
@@ -15,128 +15,103 @@ class DropdownPicker {
     required Function(List<T>) onConfirmed,
     double maxHeight = 400,
   }) async {
-    final RenderBox renderBox = fieldKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset position = renderBox.localToGlobal(Offset.zero);
-    final double width = renderBox.size.width;
-
-    final overlay = Overlay.of(context)!;
     List<T> filtered = List.from(items);
     List<T> selected = List.from(initialSelected);
 
-    OverlayEntry? entry;
+    final RenderBox renderBox =
+    fieldKey.currentContext!.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
 
-    entry = OverlayEntry(
-      builder: (_) {
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () => entry?.remove(),
-          child: Stack(
-            children: [
-              Positioned(
-                left: position.dx,
-                top: position.dy + renderBox.size.height,
-                width: width,
-                child: Material(
-                  elevation: 4,
-                  borderRadius: BorderRadius.circular(8),
-                  child: StatefulBuilder(
-                    builder: (context, setState) {
-                      return SizedBox(
-                        height: maxHeight,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: searchHint,
-                                  prefixIcon: const Icon(Icons.search),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                onChanged: (q) {
-                                  setState(() {
-                                    filtered = items
-                                        .where((e) => e
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(q.toLowerCase()))
-                                        .toList();
-                                  });
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: filtered.length,
-                                itemBuilder: (_, i) {
-                                  final it = filtered[i];
-                                  final isSel = selected.contains(it);
-                                  return MDropdownItem<T>(
-                                    item: it,
-                                    selected: isMulti ? selected.contains(it) : isSel,
-                                    isMulti: isMulti,
-                                    onTap: () {
-                                      setState(() {
-                                        if (isMulti) {
-                                          isSel
-                                              ? selected.remove(it)
-                                              : selected.add(it);
-                                        } else {
-                                          selected = [it];
-                                          onConfirmed(selected);
-                                          entry?.remove();
-                                        }
-                                      });
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            if (isMulti)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            selected.clear();
-                                          });
-                                        },
-                                        child: const Text('Očisti'),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          onConfirmed(selected);
-                                          entry?.remove();
-                                        },
-                                        child: const Text('Potvrdi'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      );
+    await showMenu<T>(
+      context: context,
+      position:
+      RelativeRect.fromLTRB(position.dx, position.dy + size.height,
+          position.dx + size.width, position.dy),
+      constraints: BoxConstraints(maxHeight: maxHeight, minWidth: size.width),
+      items: [
+        PopupMenuItem(
+          enabled: false,
+          child: SizedBox(
+            height: maxHeight,
+            width: size.width,
+            child: StatefulBuilder(builder: (context, setState) {
+              return Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: searchHint,
+                      prefixIcon: const Icon(Icons.search),
+                      border: const OutlineInputBorder(),
+                    ),
+                    onChanged: (q) {
+                      setState(() {
+                        filtered = items
+                            .where((e) => e.toString().toLowerCase().contains(q.toLowerCase()))
+                            .toList();
+                      });
                     },
                   ),
-                ),
-              ),
-            ],
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder: (c, i) {
+                        final it = filtered[i];
+                        final isSel = selected.contains(it);
+                        return MDropdownItem<T>(
+                          item: it,
+                          selected: isMulti ? selected.contains(it) : isSel,
+                          isMulti: isMulti,
+                          onTap: () {
+                            setState(() {
+                              if (isMulti) {
+                                isSel ? selected.remove(it) : selected.add(it);
+                              } else {
+                                selected = [it];
+                                onConfirmed(selected);
+                                Navigator.pop(context);
+                              }
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  if (isMulti)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {
+                                selected.clear();
+                                setState(() {});
+                              },
+                              child: const Text('Clear'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                onConfirmed(selected);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Confirm'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              );
+            }),
           ),
-        );
-      },
+        ),
+      ],
     );
-
-    overlay.insert(entry);
   }
 
   // Mobile bottom sheet
@@ -200,6 +175,7 @@ class DropdownPicker {
                         return MDropdownItem<T>(
                           item: it,
                           selected: isSel,
+                          isMulti: isMulti,
                           onTap: () {
                             setState(() {
                               if (isMulti) {
@@ -211,7 +187,6 @@ class DropdownPicker {
                               }
                             });
                           },
-                          isMulti: isMulti,
                         );
                       },
                     ),
@@ -225,10 +200,9 @@ class DropdownPicker {
                             child: OutlinedButton(
                               onPressed: () {
                                 selected.clear();
-                                // update UI via setState closure
                                 (ctx as dynamic).setState?.call(() {});
                               },
-                              child: const Text('Očisti'),
+                              child: const Text('Clear'),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -238,7 +212,7 @@ class DropdownPicker {
                                 onConfirmed(selected);
                                 Navigator.pop(context);
                               },
-                              child: const Text('Potvrdi'),
+                              child: const Text('Confirm'),
                             ),
                           ),
                         ],
@@ -253,3 +227,4 @@ class DropdownPicker {
     );
   }
 }
+

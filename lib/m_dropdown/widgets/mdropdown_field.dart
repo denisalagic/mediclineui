@@ -14,6 +14,7 @@ class DropDownField<T> extends StatefulWidget {
   final int maxLines;
   final bool enabled;
   final DropdownType dropdownType;
+  final GlobalKey fieldKey;
 
   const DropDownField({
     super.key,
@@ -21,6 +22,7 @@ class DropDownField<T> extends StatefulWidget {
     required this.selectedItemNotifier,
     required this.selectedItemsNotifier,
     required this.dropdownType,
+    required this.fieldKey,
     this.hintText = 'Select value',
     this.prefixIcon,
     this.suffixIcon,
@@ -29,13 +31,10 @@ class DropDownField<T> extends StatefulWidget {
   });
 
   @override
-  State<DropDownField<T>> createState() => DropDownFieldState<T>();
+  State<DropDownField<T>> createState() => _DropDownFieldState<T>();
 }
 
-class DropDownFieldState<T> extends State<DropDownField<T>> {
-  final GlobalKey _fieldKey = GlobalKey();
-  GlobalKey get fieldKey => _fieldKey;
-
+class _DropDownFieldState<T> extends State<DropDownField<T>> {
   T? selectedItem;
   late List<T> selectedItems;
 
@@ -68,7 +67,7 @@ class DropDownFieldState<T> extends State<DropDownField<T>> {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: GoogleFonts.ubuntu(
-        fontSize: 16.0,
+        fontSize: 16,
         letterSpacing: 1.1,
         fontWeight: FontWeight.w500,
         color: MDropdownDecoration.hintTextColor,
@@ -83,22 +82,26 @@ class DropDownFieldState<T> extends State<DropDownField<T>> {
         maxLines: widget.maxLines,
         overflow: TextOverflow.ellipsis,
         style: GoogleFonts.ubuntu(
-          fontSize: 16.0,
+          fontSize: 16,
           letterSpacing: 1.1,
           fontWeight: FontWeight.w500,
-          color: selectedItem == null ? MDropdownDecoration.hintTextColor : Colors.black,
+          color: selectedItem == null
+              ? MDropdownDecoration.hintTextColor
+              : Colors.black,
         ),
       );
     } else {
       if (selectedItems.isEmpty) return _defaultHintBuilder();
-      // chips
       return Wrap(
         spacing: 6,
         runSpacing: 6,
         children: selectedItems
             .map(
               (e) => InputChip(
-            label: Text(e.toString(), style: GoogleFonts.ubuntu(fontSize: 13), ),
+            label: Text(
+              e.toString(),
+              style: GoogleFonts.ubuntu(fontSize: 13),
+            ),
             onDeleted: () {
               widget.selectedItemsNotifier.unselect(e);
             },
@@ -114,12 +117,12 @@ class DropDownFieldState<T> extends State<DropDownField<T>> {
     return GestureDetector(
       onTap: widget.enabled ? widget.onTap : null,
       child: Container(
-        key: fieldKey,
-        constraints: const BoxConstraints(minHeight: MDropdownDecoration.defaultHeight),
+        key: widget.fieldKey,
+        constraints:
+        const BoxConstraints(minHeight: MDropdownDecoration.defaultHeight),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: MDropdownDecoration.fillColor,
-          //border: MDropdownDecoration.border,
           borderRadius: MDropdownDecoration.borderRadius,
         ),
         child: Row(
