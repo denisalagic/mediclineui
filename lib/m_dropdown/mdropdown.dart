@@ -11,6 +11,7 @@ class MDropdown2<T> extends StatefulWidget {
     super.key,
     required this.items,
     this.initialSelected,
+    this.initialSelectedItem,
     this.isMultiSelect = false,
     this.hintText = 'Select value',
     this.prefixIcon,
@@ -21,7 +22,8 @@ class MDropdown2<T> extends StatefulWidget {
   });
 
   final List<T> items;
-  final List<T>? initialSelected;
+  final List<T>? initialSelected; // For multi-select
+  final T? initialSelectedItem;
   final bool isMultiSelect;
   final String hintText;
   final Widget? prefixIcon;
@@ -43,25 +45,35 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   @override
   void initState() {
     super.initState();
-    singleCtrl = SingleSelectController<T?>(
-      widget.initialSelected?.isNotEmpty == true
-          ? widget.initialSelected!.first
-          : null,
-    );
-    multiCtrl = MultiSelectController<T>(widget.initialSelected ?? []);
+    if (widget.isMultiSelect) {
+      singleCtrl = SingleSelectController<T?>(null);
+      multiCtrl = MultiSelectController<T>(widget.initialSelected ?? []);
+    } else {
+      singleCtrl = SingleSelectController<T?>(
+          widget.initialSelectedItem ??
+              (widget.initialSelected?.isNotEmpty == true
+                  ? widget.initialSelected!.first
+                  : null)
+      );
+      multiCtrl = MultiSelectController<T>([]);
+    }
   }
 
   @override
   void didUpdateWidget(covariant MDropdown2<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialSelected != null) {
-      if (widget.isMultiSelect) {
+
+    if (widget.isMultiSelect) {
+      if (widget.initialSelected != null) {
         multiCtrl.setAll(widget.initialSelected!);
-      } else {
-        singleCtrl.selected =
-            widget.initialSelected!.isNotEmpty
-                ? widget.initialSelected!.first
-                : null;
+      }
+    } else {
+      final newSelected = widget.initialSelectedItem ??
+          (widget.initialSelected?.isNotEmpty == true
+              ? widget.initialSelected!.first
+              : null);
+      if (singleCtrl.selected != newSelected) {
+        singleCtrl.selected = newSelected;
       }
     }
   }
