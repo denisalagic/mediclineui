@@ -18,7 +18,7 @@ class MDropdownItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isMulti) {
+    /*if (isMulti) {
       return CheckboxListTile(
         dense: true,
         title: Text(
@@ -30,7 +30,7 @@ class MDropdownItem<T> extends StatelessWidget {
         value: selected,
         onChanged: (_) => onTap(),
       );
-    }
+    }*/
 
     return ListTile(
       dense: true,
