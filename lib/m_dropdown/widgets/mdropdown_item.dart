@@ -34,9 +34,11 @@ class MDropdownItem<T> extends StatelessWidget {
 
     return ListTile(
       dense: true,
-      title: Text(
-        item.toString(),
-        style: GoogleFonts.ubuntu(fontSize: 15),
+      title: Expanded(
+        child: Text(
+          item.toString(),
+          style: GoogleFonts.ubuntu(fontSize: 15),
+        ),
       ),
       trailing: selected ? const Icon(Icons.check_circle, color: Colors.green) : null,
       onTap: onTap,
