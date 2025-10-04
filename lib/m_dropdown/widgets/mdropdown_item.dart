@@ -40,7 +40,9 @@ class MDropdownItem<T> extends StatelessWidget {
         onChanged: (_) => onTap(),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       )
-          : (selected ? const Icon(Icons.check_circle, color: Colors.green) : null),
+          : (selected
+          ? const Icon(Icons.check_circle, color: Colors.green)
+          : null),
     );
-
+  }
 }
