@@ -18,30 +18,29 @@ class MDropdownItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*if (isMulti) {
-      return CheckboxListTile(
-        dense: true,
-        title: Text(
-          item.toString(),
-          softWrap: true,  // Add this line
-          overflow: TextOverflow.visible,
-          style: GoogleFonts.ubuntu(fontSize: 15),
-        ),
-        value: selected,
-        onChanged: (_) => onTap(),
-      );
-    }*/
-
     return ListTile(
       dense: true,
-      title: Expanded(
-        child: Text(
-          item.toString(),
-          style: GoogleFonts.ubuntu(fontSize: 15),
-        ),
-      ),
-      trailing: selected ? const Icon(Icons.check_circle, color: Colors.green) : null,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
       onTap: onTap,
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              item.toString(),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              style: GoogleFonts.ubuntu(fontSize: 15),
+            ),
+          ),
+        ],
+      ),
+      trailing: isMulti
+          ? Checkbox(
+        value: selected,
+        onChanged: (_) => onTap(),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      )
+          : (selected ? const Icon(Icons.check_circle, color: Colors.green) : null),
     );
-  }
+
 }
