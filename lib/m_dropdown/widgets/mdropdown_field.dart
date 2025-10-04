@@ -1,225 +1,139 @@
+// lib/widgets/mdropdown/mdropdown_field.dart
 import 'package:flutter/material.dart';
-import 'mdropdown_item.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class DropdownPicker {
-  // Web/desktop popup
-  static Future<void> showPopup<T>({
-    required BuildContext context,
-    required Offset position,
-    required List<T> items,
-    required List<T> initialSelected,
-    required bool isMulti,
-    required String searchHint,
-    required Function(List<T>) onConfirmed,
-    required double width,   // <-- field width
-    double maxHeight = 400,
-  }) async {
-    List<T> filtered = List.from(items);
-    List<T> selected = List.from(initialSelected);
+import '../controller/mdropdown_controller.dart';
+import '../decoration/mdropdown_decoration.dart';
 
-    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+class DropDownField<T> extends StatefulWidget {
+  final VoidCallback onTap;
+  final SingleSelectController<T?> selectedItemNotifier;
+  final MultiSelectController<T> selectedItemsNotifier;
+  final String hintText;
+  final Widget? prefixIcon, suffixIcon;
+  final int maxLines;
+  final bool enabled;
+  final DropdownType dropdownType;
 
-    await showMenu<T>(
-      context: context,
-      position: RelativeRect.fromRect(
-          Rect.fromPoints(position, position), Offset.zero & overlay.size),
-      constraints: BoxConstraints(maxHeight: maxHeight, minWidth: width),
-      items: [
-        PopupMenuItem(
-          enabled: false,
-          child: SizedBox(
-            height: maxHeight,
-            width: width,
-            child: StatefulBuilder(
-              builder: (context, setState) => Column(
-                children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: searchHint,
-                      prefixIcon: const Icon(Icons.search),
-                      border: const OutlineInputBorder(),
-                    ),
-                    onChanged: (q) {
-                      setState(() {
-                        filtered = items
-                            .where((e) => e.toString().toLowerCase().contains(q.toLowerCase()))
-                            .toList();
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filtered.length,
-                      itemBuilder: (c, i) {
-                        final it = filtered[i];
-                        final isSel = selected.contains(it);
+  const DropDownField({
+    super.key,
+    required this.onTap,
+    required this.selectedItemNotifier,
+    required this.selectedItemsNotifier,
+    required this.dropdownType,
+    this.hintText = 'Select value',
+    this.prefixIcon,
+    this.suffixIcon,
+    this.maxLines = 1,
+    this.enabled = true,
+  });
 
-                        return MDropdownItem<T>(
-                          item: it,
-                          selected: isMulti ? selected.contains(it) : isSel,
-                          onTap: () {
-                            setState(() {
-                              if (isMulti) {
-                                isSel ? selected.remove(it) : selected.add(it);
-                              } else {
-                                selected = [it];
-                                onConfirmed(selected);
-                                Navigator.pop(context);
-                              }
-                            });
-                          },
-                          isMulti: isMulti,
-                        );
-                      },
-                    ),
-                  ),
-                  if (isMulti)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () {
-                                selected.clear();
-                                setState(() {});
-                              },
-                              child: const Text('Očisti'),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                onConfirmed(selected);
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Potvrdi'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        )
-      ],
+  @override
+  State<DropDownField<T>> createState() => _DropDownFieldState<T>();
+}
+
+class _DropDownFieldState<T> extends State<DropDownField<T>> {
+  T? selectedItem;
+  late List<T> selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedItem = widget.selectedItemNotifier.value;
+    selectedItems = widget.selectedItemsNotifier.value;
+    widget.selectedItemNotifier.addListener(_ctrlChanged);
+    widget.selectedItemsNotifier.addListener(_ctrlChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.selectedItemNotifier.removeListener(_ctrlChanged);
+    widget.selectedItemsNotifier.removeListener(_ctrlChanged);
+    super.dispose();
+  }
+
+  void _ctrlChanged() {
+    setState(() {
+      selectedItem = widget.selectedItemNotifier.value;
+      selectedItems = widget.selectedItemsNotifier.value;
+    });
+  }
+
+  Widget _defaultHintBuilder() {
+    return Text(
+      widget.hintText,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: GoogleFonts.ubuntu(
+        fontSize: 16,
+        letterSpacing: 1.1,
+        fontWeight: FontWeight.w500,
+        color: MDropdownDecoration.hintTextColor,
+      ),
     );
   }
 
-  // Mobile bottom sheet remains unchanged
-  static Future<void> showBottomSheet<T>({
-    required BuildContext context,
-    required List<T> items,
-    required List<T> initialSelected,
-    required bool isMulti,
-    required String searchHint,
-    required Function(List<T>) onConfirmed,
-  }) async {
-    List<T> filtered = List.from(items);
-    List<T> selected = List.from(initialSelected);
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (ctx) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.7,
-          minChildSize: 0.3,
-          maxChildSize: 0.95,
-          builder: (context, ctrl) => StatefulBuilder(
-            builder: (context, setState) => Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: searchHint,
-                      prefixIcon: const Icon(Icons.search),
-                      border: const OutlineInputBorder(),
-                    ),
-                    onChanged: (q) => setState(() {
-                      filtered = items
-                          .where((e) => e.toString().toLowerCase().contains(q.toLowerCase()))
-                          .toList();
-                    }),
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: ListView.builder(
-                      controller: ctrl,
-                      itemCount: filtered.length,
-                      itemBuilder: (_, i) {
-                        final it = filtered[i];
-                        final isSel = selected.contains(it);
-                        return MDropdownItem<T>(
-                          item: it,
-                          selected: isSel,
-                          onTap: () {
-                            setState(() {
-                              if (isMulti) {
-                                isSel ? selected.remove(it) : selected.add(it);
-                              } else {
-                                selected = [it];
-                                onConfirmed(selected);
-                                Navigator.pop(context);
-                              }
-                            });
-                          },
-                          isMulti: isMulti,
-                        );
-                      },
-                    ),
-                  ),
-                  if (isMulti)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () {
-                                selected.clear();
-                                (ctx as dynamic).setState?.call(() {});
-                              },
-                              child: const Text('Očisti'),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                onConfirmed(selected);
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Potvrdi'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
+  Widget _defaultHeaderBuilder() {
+    if (widget.dropdownType == DropdownType.singleSelect) {
+      return Text(
+        selectedItem?.toString() ?? widget.hintText,
+        maxLines: widget.maxLines,
+        overflow: TextOverflow.ellipsis,
+        style: GoogleFonts.ubuntu(
+          fontSize: 16,
+          letterSpacing: 1.1,
+          fontWeight: FontWeight.w500,
+          color: selectedItem == null
+              ? MDropdownDecoration.hintTextColor
+              : Colors.black,
+        ),
+      );
+    } else {
+      if (selectedItems.isEmpty) return _defaultHintBuilder();
+      return Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        children: selectedItems
+            .map(
+              (e) => InputChip(
+            label: Text(
+              e.toString(),
+              style: GoogleFonts.ubuntu(fontSize: 13),
             ),
+            onDeleted: () {
+              widget.selectedItemsNotifier.unselect(e);
+            },
           ),
-        );
-      },
+        )
+            .toList(),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.enabled ? widget.onTap : null,
+      child: Container(
+        constraints:
+        const BoxConstraints(minHeight: MDropdownDecoration.defaultHeight),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: MDropdownDecoration.fillColor,
+          borderRadius: MDropdownDecoration.borderRadius,
+        ),
+        child: Row(
+          children: [
+            if (widget.prefixIcon != null) ...[
+              widget.prefixIcon!,
+              const SizedBox(width: 12),
+            ],
+            Expanded(child: _defaultHeaderBuilder()),
+            const SizedBox(width: 12),
+            widget.suffixIcon ?? MDropdownDecoration.overlayIcon,
+          ],
+        ),
+      ),
     );
   }
 }

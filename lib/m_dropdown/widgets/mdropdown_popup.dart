@@ -1,42 +1,38 @@
 
 import 'package:flutter/material.dart';
-
 import 'mdropdown_item.dart';
 
 class DropdownPicker {
-  // Desktop/Web popup
+  // Web/desktop popup
   static Future<void> showPopup<T>({
     required BuildContext context,
-    required GlobalKey fieldKey,
+    required Offset position,
     required List<T> items,
     required List<T> initialSelected,
     required bool isMulti,
     required String searchHint,
     required Function(List<T>) onConfirmed,
+    required double width,   // <-- field width
     double maxHeight = 400,
   }) async {
     List<T> filtered = List.from(items);
     List<T> selected = List.from(initialSelected);
 
-    final RenderBox renderBox =
-    fieldKey.currentContext!.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
-    final size = renderBox.size;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
     await showMenu<T>(
       context: context,
-      position:
-      RelativeRect.fromLTRB(position.dx, position.dy + size.height,
-          position.dx + size.width, position.dy),
-      constraints: BoxConstraints(maxHeight: maxHeight, minWidth: size.width),
+      position: RelativeRect.fromRect(
+          Rect.fromPoints(position, position), Offset.zero & overlay.size),
+      constraints: BoxConstraints(maxHeight: maxHeight, minWidth: width),
       items: [
         PopupMenuItem(
           enabled: false,
           child: SizedBox(
             height: maxHeight,
-            width: size.width,
-            child: StatefulBuilder(builder: (context, setState) {
-              return Column(
+            width: width,
+            child: StatefulBuilder(
+              builder: (context, setState) => Column(
                 children: [
                   TextField(
                     decoration: InputDecoration(
@@ -59,10 +55,10 @@ class DropdownPicker {
                       itemBuilder: (c, i) {
                         final it = filtered[i];
                         final isSel = selected.contains(it);
+
                         return MDropdownItem<T>(
                           item: it,
                           selected: isMulti ? selected.contains(it) : isSel,
-                          isMulti: isMulti,
                           onTap: () {
                             setState(() {
                               if (isMulti) {
@@ -74,6 +70,7 @@ class DropdownPicker {
                               }
                             });
                           },
+                          isMulti: isMulti,
                         );
                       },
                     ),
@@ -89,7 +86,7 @@ class DropdownPicker {
                                 selected.clear();
                                 setState(() {});
                               },
-                              child: const Text('Clear'),
+                              child: const Text('Očisti'),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -99,22 +96,22 @@ class DropdownPicker {
                                 onConfirmed(selected);
                                 Navigator.pop(context);
                               },
-                              child: const Text('Confirm'),
+                              child: const Text('Potvrdi'),
                             ),
                           ),
                         ],
                       ),
                     ),
                 ],
-              );
-            }),
+              ),
+            ),
           ),
-        ),
+        )
       ],
     );
   }
 
-  // Mobile bottom sheet
+  // Mobile bottom sheet remains unchanged
   static Future<void> showBottomSheet<T>({
     required BuildContext context,
     required List<T> items,
@@ -175,7 +172,6 @@ class DropdownPicker {
                         return MDropdownItem<T>(
                           item: it,
                           selected: isSel,
-                          isMulti: isMulti,
                           onTap: () {
                             setState(() {
                               if (isMulti) {
@@ -187,6 +183,7 @@ class DropdownPicker {
                               }
                             });
                           },
+                          isMulti: isMulti,
                         );
                       },
                     ),
@@ -202,7 +199,7 @@ class DropdownPicker {
                                 selected.clear();
                                 (ctx as dynamic).setState?.call(() {});
                               },
-                              child: const Text('Clear'),
+                              child: const Text('Očisti'),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -212,7 +209,7 @@ class DropdownPicker {
                                 onConfirmed(selected);
                                 Navigator.pop(context);
                               },
-                              child: const Text('Confirm'),
+                              child: const Text('Potvrdi'),
                             ),
                           ),
                         ],
@@ -227,4 +224,3 @@ class DropdownPicker {
     );
   }
 }
-
