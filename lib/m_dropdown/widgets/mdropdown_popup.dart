@@ -13,8 +13,7 @@ class DropdownPicker {
     required bool isMulti,
     required String searchHint,
     required Function(List<T>) onConfirmed,
-    double maxHeight = 500,
-    double width = 320,
+    double maxHeight = 400,
   }) async {
     List<T> filtered = List.from(items);
     List<T> selected = List.from(initialSelected);
@@ -25,13 +24,13 @@ class DropdownPicker {
     await showMenu<T>(
       context: context,
       position: RelativeRect.fromRect(posRect, Offset.zero & overlay.size),
-      constraints: BoxConstraints(maxHeight: maxHeight, minWidth: width),
+      constraints: BoxConstraints(maxHeight: maxHeight,),
       items: [
         PopupMenuItem(
           enabled: false,
           child: SizedBox(
             height: maxHeight,
-            width: width,
+            width: double.infinity,
             child: StatefulBuilder(builder: (context, setState) {
               return Column(
                 children: [

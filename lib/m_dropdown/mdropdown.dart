@@ -6,7 +6,6 @@ import 'controller/mdropdown_controller.dart';
 import 'widgets/mdropdown_field.dart';
 import 'widgets/mdropdown_popup.dart';
 
-
 class MDropdown2<T> extends StatefulWidget {
   const MDropdown2({
     super.key,
@@ -38,7 +37,11 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   @override
   void initState() {
     super.initState();
-    singleCtrl = SingleSelectController<T?>(widget.initialSelected?.isNotEmpty == true ? widget.initialSelected!.first : null);
+    singleCtrl = SingleSelectController<T?>(
+      widget.initialSelected?.isNotEmpty == true
+          ? widget.initialSelected!.first
+          : null,
+    );
     multiCtrl = MultiSelectController<T>(widget.initialSelected ?? []);
   }
 
@@ -46,8 +49,13 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   void didUpdateWidget(covariant MDropdown2<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.initialSelected != null) {
-      if (widget.isMultiSelect) multiCtrl.setAll(widget.initialSelected!);
-      else singleCtrl.selected = widget.initialSelected!.isNotEmpty ? widget.initialSelected!.first : null;
+      if (widget.isMultiSelect)
+        multiCtrl.setAll(widget.initialSelected!);
+      else
+        singleCtrl.selected =
+            widget.initialSelected!.isNotEmpty
+                ? widget.initialSelected!.first
+                : null;
     }
   }
 
@@ -69,7 +77,10 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
         context: context,
         position: topLeft,
         items: widget.items,
-        initialSelected: widget.isMultiSelect ? multiCtrl.value : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
+        initialSelected:
+            widget.isMultiSelect
+                ? multiCtrl.value
+                : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
         isMulti: widget.isMultiSelect,
         searchHint: widget.hintText,
         onConfirmed: _onConfirmed,
@@ -78,7 +89,10 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
       await DropdownPicker.showBottomSheet<T>(
         context: context,
         items: widget.items,
-        initialSelected: widget.isMultiSelect ? multiCtrl.value : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
+        initialSelected:
+            widget.isMultiSelect
+                ? multiCtrl.value
+                : (singleCtrl.value != null ? [singleCtrl.value as T] : []),
         isMulti: widget.isMultiSelect,
         searchHint: widget.hintText,
         onConfirmed: _onConfirmed,
@@ -88,15 +102,21 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return DropDownField<T>(
-      onTap: () => _openPicker(context),
-      selectedItemNotifier: singleCtrl,
-      selectedItemsNotifier: multiCtrl,
-      dropdownType: widget.isMultiSelect ? DropdownType.multipleSelect : DropdownType.singleSelect,
-      hintText: widget.hintText,
-      prefixIcon: widget.prefixIcon,
-      suffixIcon: widget.suffixIcon,
-      maxLines: 1,
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(top: 4.0),
+      child: DropDownField<T>(
+        onTap: () => _openPicker(context),
+        selectedItemNotifier: singleCtrl,
+        selectedItemsNotifier: multiCtrl,
+        dropdownType:
+            widget.isMultiSelect
+                ? DropdownType.multipleSelect
+                : DropdownType.singleSelect,
+        hintText: widget.hintText,
+        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon,
+        maxLines: 1,
+      ),
     );
   }
 }

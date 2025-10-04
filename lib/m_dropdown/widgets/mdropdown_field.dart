@@ -95,7 +95,7 @@ class DropDownFieldState<T> extends State<DropDownField<T>> {
         children: selectedItems
             .map(
               (e) => InputChip(
-            label: Text(e.toString(), style: GoogleFonts.ubuntu(fontSize: 13)),
+            label: Text(e.toString(), style: GoogleFonts.ubuntu(fontSize: 13), ),
             onDeleted: () {
               widget.selectedItemsNotifier.unselect(e);
             },
@@ -115,7 +115,7 @@ class DropDownFieldState<T> extends State<DropDownField<T>> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: MDropdownDecoration.fillColor,
-          border: MDropdownDecoration.border,
+          //border: MDropdownDecoration.border,
           borderRadius: MDropdownDecoration.borderRadius,
         ),
         child: Row(
