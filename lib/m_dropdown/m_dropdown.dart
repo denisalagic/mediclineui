@@ -3,8 +3,8 @@ import '../utils/device_helper.dart';
 import 'm_dropdown_bottomsheet.dart';
 import 'm_dropdown_field.dart';
 
-class MDropdown<T> extends StatelessWidget {
-  const MDropdown({
+class MDropdown2<T> extends StatelessWidget {
+  const MDropdown2({
     super.key,
     required this.label,
     required this.items,
