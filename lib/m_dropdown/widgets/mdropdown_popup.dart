@@ -11,7 +11,7 @@ class DropdownPicker {
     required bool isMulti,
     required String searchHint,
     required Function(List<T>) onConfirmed,
-    required double width, // <-- field width
+    required double width,
     double maxHeight = 400,
   }) async {
     List<T> filtered = List.from(items);
@@ -19,50 +19,47 @@ class DropdownPicker {
 
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
-    await showMenu<T>(
+    await showGeneralDialog(
       context: context,
-      position: RelativeRect.fromRect(
-        Rect.fromPoints(position, position),
-        Offset.zero & overlay.size,
-      ),
-      constraints: BoxConstraints(maxHeight: maxHeight, minWidth: width),
-      items: [
-        PopupMenuItem(
-          enabled: false,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            height: maxHeight,
-            width: width,
-            child: StatefulBuilder(
-              builder:
-                  (context, setState) => Column(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: searchHint,
-                          prefixIcon: const Icon(Icons.search),
-                          border: const OutlineInputBorder(),
-                        ),
-                        onChanged: (q) {
-                          setState(() {
-                            filtered =
-                                items
-                                    .where(
-                                      (e) => e
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(q.toLowerCase()),
-                                    )
-                                    .toList();
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      Expanded(
-                        child: ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(
-                            scrollbars: false,  // Disable scrollbar on the parent
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Stack(
+          children: [
+            Positioned(
+              left: position.dx,
+              top: position.dy,
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: width,
+                  height: maxHeight,
+                  padding: const EdgeInsets.all(8.0),
+                  child: StatefulBuilder(
+                    builder: (context, setState) => Column(
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: searchHint,
+                            prefixIcon: const Icon(Icons.search),
+                            border: const OutlineInputBorder(),
                           ),
+                          onChanged: (q) {
+                            setState(() {
+                              filtered = items
+                                  .where((e) => e
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains(q.toLowerCase()))
+                                  .toList();
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        Expanded(
                           child: ListView.builder(
                             itemCount: filtered.length,
                             itemBuilder: (c, i) {
@@ -75,9 +72,7 @@ class DropdownPicker {
                                 onTap: () {
                                   setState(() {
                                     if (isMulti) {
-                                      isSel
-                                          ? selected.remove(it)
-                                          : selected.add(it);
+                                      isSel ? selected.remove(it) : selected.add(it);
                                     } else {
                                       selected = [it];
                                       onConfirmed(selected);
@@ -90,42 +85,54 @@ class DropdownPicker {
                             },
                           ),
                         ),
-                      ),
-                      if (isMulti)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    selected.clear();
-                                    setState(() {});
-                                  },
-                                  child: const Text('Očisti'),
+                        if (isMulti)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      selected.clear();
+                                      setState(() {});
+                                    },
+                                    child: const Text('Očisti'),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    onConfirmed(selected);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Potvrdi'),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      onConfirmed(selected);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Potvrdi'),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
+                ),
+              ),
             ),
+          ],
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
+            child: child,
           ),
-        ),
-      ],
+        );
+      },
     );
   }
+
 
   // Mobile bottom sheet remains unchanged
   static Future<void> showBottomSheet<T>({
