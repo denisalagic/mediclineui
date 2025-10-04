@@ -23,6 +23,8 @@ class MDropdownItem<T> extends StatelessWidget {
         dense: true,
         title: Text(
           item.toString(),
+          softWrap: true,  // Add this line
+          overflow: TextOverflow.visible,
           style: GoogleFonts.ubuntu(fontSize: 15),
         ),
         value: selected,
