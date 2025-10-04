@@ -59,31 +59,36 @@ class DropdownPicker {
                       ),
                       const SizedBox(height: 8),
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (c, i) {
-                            final it = filtered[i];
-                            final isSel = selected.contains(it);
+                        child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context).copyWith(
+                            scrollbars: false,  // Disable scrollbar on the parent
+                          ),
+                          child: ListView.builder(
+                            itemCount: filtered.length,
+                            itemBuilder: (c, i) {
+                              final it = filtered[i];
+                              final isSel = selected.contains(it);
 
-                            return MDropdownItem<T>(
-                              item: it,
-                              selected: isMulti ? selected.contains(it) : isSel,
-                              onTap: () {
-                                setState(() {
-                                  if (isMulti) {
-                                    isSel
-                                        ? selected.remove(it)
-                                        : selected.add(it);
-                                  } else {
-                                    selected = [it];
-                                    onConfirmed(selected);
-                                    Navigator.pop(context);
-                                  }
-                                });
-                              },
-                              isMulti: isMulti,
-                            );
-                          },
+                              return MDropdownItem<T>(
+                                item: it,
+                                selected: isMulti ? selected.contains(it) : isSel,
+                                onTap: () {
+                                  setState(() {
+                                    if (isMulti) {
+                                      isSel
+                                          ? selected.remove(it)
+                                          : selected.add(it);
+                                    } else {
+                                      selected = [it];
+                                      onConfirmed(selected);
+                                      Navigator.pop(context);
+                                    }
+                                  });
+                                },
+                                isMulti: isMulti,
+                              );
+                            },
+                          ),
                         ),
                       ),
                       if (isMulti)
