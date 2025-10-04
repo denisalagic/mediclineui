@@ -33,6 +33,7 @@ class DropDownField<T> extends StatefulWidget {
 }
 
 class DropDownFieldState<T> extends State<DropDownField<T>> {
+  final GlobalKey _fieldKey = GlobalKey();
   T? selectedItem;
   late List<T> selectedItems;
 
@@ -111,6 +112,7 @@ class DropDownFieldState<T> extends State<DropDownField<T>> {
     return GestureDetector(
       onTap: widget.enabled ? widget.onTap : null,
       child: Container(
+        key: _fieldKey,
         constraints: const BoxConstraints(minHeight: MDropdownDecoration.defaultHeight),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(

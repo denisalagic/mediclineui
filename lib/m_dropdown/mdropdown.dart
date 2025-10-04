@@ -49,13 +49,14 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
   void didUpdateWidget(covariant MDropdown2<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.initialSelected != null) {
-      if (widget.isMultiSelect)
+      if (widget.isMultiSelect) {
         multiCtrl.setAll(widget.initialSelected!);
-      else
+      } else {
         singleCtrl.selected =
             widget.initialSelected!.isNotEmpty
                 ? widget.initialSelected!.first
                 : null;
+      }
     }
   }
 
@@ -72,10 +73,11 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
     if (DeviceHelpers.isDesktopDeviceOrWeb) {
       // get widget position
       final renderBox = context.findRenderObject() as RenderBox;
-      final topLeft = renderBox.localToGlobal(Offset.zero);
+      final size = renderBox.size;
+      final position = renderBox.localToGlobal(Offset.zero);
       await DropdownPicker.showPopup<T>(
         context: context,
-        position: topLeft,
+        position: position,
         items: widget.items,
         initialSelected:
             widget.isMultiSelect
@@ -84,6 +86,7 @@ class _MDropdownState<T> extends State<MDropdown2<T>> {
         isMulti: widget.isMultiSelect,
         searchHint: widget.hintText,
         onConfirmed: _onConfirmed,
+        width: size.width,
       );
     } else {
       await DropdownPicker.showBottomSheet<T>(
