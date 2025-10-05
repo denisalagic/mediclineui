@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../constants/mcolors.dart';
 import '../controller/mdropdown_controller.dart';
 import '../decoration/mdropdown_decoration.dart';
 
@@ -85,9 +86,10 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
           fontSize: 16,
           letterSpacing: 1.1,
           fontWeight: FontWeight.w500,
-          color: selectedItem == null
-              ? MDropdownDecoration.hintTextColor
-              : Colors.black,
+          color:
+              selectedItem == null
+                  ? MDropdownDecoration.hintTextColor
+                  : Colors.black,
         ),
       );
     } else {
@@ -95,19 +97,25 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
       return Wrap(
         spacing: 6,
         runSpacing: 6,
-        children: selectedItems
-            .map(
-              (e) => InputChip(
-            label: Text(
-              e.toString(),
-              style: GoogleFonts.ubuntu(fontSize: 13),
-            ),
-            onDeleted: () {
-              widget.selectedItemsNotifier.unselect(e);
-            },
-          ),
-        )
-            .toList(),
+        children:
+            selectedItems
+                .map(
+                  (e) => InputChip(
+                    backgroundColor: MColors.primaryGreen,
+                    label: Text(
+                      e.toString(),
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 13,
+                        color: Colors.white,
+                      ),
+                    ),
+                    deleteIconColor: Colors.white,
+                    onDeleted: () {
+                      widget.selectedItemsNotifier.unselect(e);
+                    },
+                  ),
+                )
+                .toList(),
       );
     }
   }
@@ -117,16 +125,15 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
     return GestureDetector(
       onTap: widget.enabled ? widget.onTap : null,
       child: Container(
-        constraints:
-        const BoxConstraints(minHeight: MDropdownDecoration.defaultHeight),
+        constraints: const BoxConstraints(
+          minHeight: MDropdownDecoration.defaultHeight,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: MDropdownDecoration.fillColor,
           borderRadius: MDropdownDecoration.borderRadius,
           border: Border.all(
-            color: widget.hasError
-                ? Colors.red
-                : Colors.transparent,
+            color: widget.hasError ? Colors.red : Colors.transparent,
             width: 1.5,
           ),
         ),
