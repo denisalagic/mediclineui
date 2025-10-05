@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/mcolors.dart';
@@ -31,7 +32,7 @@ class MTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final bool? enabled;
   final TextInputType? keyboardType;
-  final List<TextInputFormatter>? inputFormatters = [];
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class MTextField extends StatelessWidget {
         top: 4.0,
       ),
       child: TextFormField(
-        inputFormatters: inputFormatters,
+        inputFormatters: inputFormatters ?? [],
         validator: (val) {
           return validator != null ? validator!(val) : null;
         },
