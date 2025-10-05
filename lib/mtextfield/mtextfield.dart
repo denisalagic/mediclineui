@@ -16,7 +16,8 @@ class MTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.enabled = false,
-    this.keyboardType = TextInputType.text
+    this.keyboardType = TextInputType.text,
+    this.inputFormatters,
   });
 
   final TextEditingController controller;
@@ -30,6 +31,7 @@ class MTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final bool? enabled;
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters = [];
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class MTextField extends StatelessWidget {
         top: 4.0,
       ),
       child: TextFormField(
+        inputFormatters: inputFormatters,
         validator: (val) {
           return validator != null ? validator!(val) : null;
         },

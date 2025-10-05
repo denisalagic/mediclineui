@@ -32,6 +32,7 @@ class DropdownPicker {
               left: position.dx,
               top: position.dy,
               child: Material(
+                color: Colors.white,
                 elevation: 8,
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
