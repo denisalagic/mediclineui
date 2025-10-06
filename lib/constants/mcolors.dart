@@ -13,7 +13,7 @@ class MColors {
 
   static const lightBlue = Color(0xFFBBDEFB);
   static Color listBackground = Colors.grey.shade100;
-  static Color background = Color(0xFFFAFBFB);
+  static Color background = Color(0xFFF6F7F8);
 
   static Color hintText = Color(0xFFA7A7A7);
 }
