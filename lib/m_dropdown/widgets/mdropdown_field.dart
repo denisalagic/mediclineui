@@ -101,6 +101,10 @@ class _DropDownFieldState<T> extends State<DropDownField<T>> {
             selectedItems
                 .map(
                   (e) => InputChip(
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
                     backgroundColor: MColors.primaryGreen,
                     label: Text(
                       e.toString(),
