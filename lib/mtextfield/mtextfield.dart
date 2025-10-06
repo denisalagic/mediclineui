@@ -49,7 +49,7 @@ class MTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(4.0),
             borderSide: BorderSide(width: 0, style: BorderStyle.none),
           ),
           hoverColor: Colors.white,
@@ -57,14 +57,14 @@ class MTextField extends StatelessWidget {
           filled: true,
           fillColor: Colors.white,
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(4.0),
             borderSide: BorderSide(
               color: Colors.red,
               width: 1.5,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(4.0),
             borderSide: BorderSide(
               color: Colors.red,
               width: 1.5,
